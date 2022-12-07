@@ -117,13 +117,11 @@
 // 自定义JSObjcDelegate协议，而且此协议必须遵守JSExport这个协议，自定义协议中的方法就是暴露给web页面的方法
 #pragma mark - JSObjcDelegate
 
-//  假设此方法是在子线程中执行的，线程名sub-thread
+//  客户端暴露给前端调用的方法
 - (void)getMsgFromFS:(NSString *)infoStr {
-    // 这句假设要在主线程中执行，线程名main-thread
     NSLog(@"getMsgFromFS infoStr:%@", infoStr);
         
-    // 下面这两句代码最好还是要在子线程sub-thread中执行啊
-    // 获取到照片之后在回调js的方法picCallback把图片传出去
+    //  这里有个点要注意一下：这里的执行线程是不一样的。下面调用是在子线程中进行的，而上面的代码是在主线程中执行的。
     NSDictionary *info = [self dictionaryWithJsonString:infoStr];
     NSDictionary *params = info[@"params"];
     NSLog(@"getMsgFromFS params:%@", params);
