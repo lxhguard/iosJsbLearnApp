@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+        <style>
+            html {
+                background: yellow;
+            }
+            #iosMsgWrapper {
+                color: red;
+            }
+        </style>
+</head>
+<body>
+    <h1>黄色背景：前端页面</h1>
+    
+    <div>
+        <span>接受来自客户端的信息：</span>
+        <span id="iosMsgWrapper"></span>
+    </div>
+    
+    <br />
+        
+    <div><input type="button" value="向IOS发数据" onclick="sendMsgToIOS()" /></div>
+
+<script>
+    /** 提供给客户端调用的方法，用于更改前端页面数据 */
+    function getMsgFromIOS(info) {
+        try {
+            const { eventName = '', params = {} } = info || {};
+            if (eventName === 'change_fe_text') {
+                const { desc = '' } = params || {};
+                const iosMsgWrapperNode = document.getElementById('iosMsgWrapper');
+                iosMsgWrapperNode.innerHTML = desc;
+            }
+        } catch {
+            alert(error, info);
+        }
+    };
+    
+    /** 前端向客户端发送数据，客户端用于更新客户端页面 */
+    function sendMsgToIOS() {
+        const sendData = {
+            eventName: 'post_data_to_ios',
+            params: {
+                desc: '来自前端的数据',
+            }
+        };
+        const sendDataStr = JSON.stringify(sendData);
+        window.JSBridge.getMsgFromFS(sendDataStr);
+    }
+</script>
+</body>
+</html>
